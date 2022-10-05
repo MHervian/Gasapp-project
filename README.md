@@ -20,3 +20,7 @@ jQuery works as an AJAX to read raw data from endpoint automatically.
 ## Screenshot
 
 ![Screenshot of Program](https://github.com/MHervian/Gasapp-project/screenshot.png)
+
+## Date Launch
+
+This repo has been completed on November 29, 2022.
