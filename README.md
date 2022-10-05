@@ -19,7 +19,7 @@ jQuery works as an AJAX to read raw data from endpoint automatically.
 
 ## Screenshot
 
-[Screenshot of Program](screenshot.png)
+![Screenshot of Program](screenshot.png)
 
 ## Date Launch
 
