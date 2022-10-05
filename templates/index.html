@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <!-- <link
+      rel="stylesheet"
+      href="../static/src/bootstrap/css/bootstrap.min.css"
+    /> -->
+    <style>
+      .judul-app {
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+      </p>
+    <![endif]-->
+
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+      <span class="text-white judul-app" style="color: red;">APLIKASI</span>
+    </nav>
+
+    <div class="container-fluid px-3">
+      <div class="row mt-5">
+        <div class="offset-md-2 col-md-8">
+          <div class="card shadow-sm rounded">
+            <h5 class="card-header font-weight-bold text-center">
+              Aplikasi Monitoring Gas
+            </h5>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <tr>
+                  <th>Tabung A</th>
+                  <th>Tabung B</th>
+                  <th>Tabung Central</th>
+                </tr>
+                <tr>
+                  <td id="tabungA">-</td>
+                  <td id="tabungB">-</td>
+                  <td id="tabungCentral">-</td>
+                </tr>
+                <tr>
+                  <td id="SA"></td>
+                  <td id="SB"></td>
+                </tr>
+              </table>
+
+              <p class="mt-4 text-center">Nilai aliran pipa</p>
+              <p class="text-center" id="aliran">-</p>
+
+              <p class="mt-5 text-center" style="font-size: 20px;">
+                Status Monitoring
+              </p>
+              <div class="border shadow-sm p-3 text-center" id="status">
+                -
+              </div>
+              <div class="text-center mt-4">
+                <button id="mulai" class="btn btn-lg btn-primary">Mulai</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/jquery/jquery.min.js"></script>
+    <!-- <script src="../static/src/jquery/jquery.min.js"></script> -->
+    <script>
+      var timeOutID = 0;
+
+      function readDataArduino() {
+        var dataResponse = null;
+
+        $.ajax({
+          url: "http://localhost:5000/read",
+          type: "GET",
+          success: function (response) {
+            dataResponse = JSON.parse(response);
+            // console.log("Testing berhasil");
+            console.log(dataResponse);
+            warnaA = "red";
+            textA = "OFF";
+            warnaB = "red";
+            textB = "OFF";
+
+            if (dataResponse["data"][5] == "A on") {
+              warnaA = "green";
+              textA = "ON";
+            }
+
+            if (dataResponse["data"][6] == "B on") {
+              warnaB = "green";
+              textB = "ON";
+            }
+
+            $("#tabungA").text(dataResponse["data"][0] + "KPa");
+            $("#tabungB").text(dataResponse["data"][1] + "KPa");
+            $("#tabungCentral").text(dataResponse["data"][2] + "KPa");
+            $("#aliran").text(dataResponse["data"][3] + "L/H");
+            $("#status").text(dataResponse["data"][4]);
+            $("#SA")
+              .text(textA)
+              .css({ color: warnaA, "font-weight": "bolder" });
+            $("#SB")
+              .text(textB)
+              .css({ color: warnaB, "font-weight": "bolder" });
+
+            clearTimeout(timeOutID);
+
+            timeOutID = setTimeout(readDataArduino, 1);
+          },
+          error: function (response) {
+            console.log(
+              "An error occured: " + response.status + " " + response.statusText
+            );
+          },
+        });
+      }
+
+      $(document).ready(function () {
+        $("#mulai").click(function () {
+          alert("Memulai");
+          timeOutID = setTimeout(readDataArduino, 1);
+        });
+      });
+    </script>
+  </body>
+</html>
