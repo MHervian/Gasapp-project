@@ -23,4 +23,4 @@ jQuery works as an AJAX to read raw data from endpoint automatically.
 
 ## Date Launch
 
-This repo has been completed on November 29, 2022.
+This repo has been completed on November 29, 2021.
